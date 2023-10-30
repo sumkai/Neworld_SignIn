@@ -2,7 +2,7 @@ from selenium import webdriver
 import time
 import json
 import os
-from selenium.webdriver.chrome.options import Options
+#from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
 
@@ -16,7 +16,8 @@ chrome_options.add_argument('--disable-gpu')
 # action  linux服务器驱动地址
 
 service = Service(executable_path="/home/runner/work/Neworld_SignIn/Neworld_SignIn/driver/chromedriver")
-driver = webdriver.Chrome(service=service,chrome_options=chrome_options)  
+driver = webdriver.Chrome()  
+#driver = webdriver.Chrome(service=service,chrome_options=chrome_options)  
 #driver = webdriver.Chrome(executable_path='/home/runner/work/Neworld_SignIn/Neworld_SignIn/driver/chromedriver',chrome_options=chrome_options)    # Chrome浏览器  
 # driver = webdriver.Chrome(executable_path='/home/runner/work/Neworld_SignIn/Neworld_SignIn/driver/chromedriver')    # Chrome浏览器  
 
