@@ -54,7 +54,7 @@ driver.find_element(By.ID, value="passwd").send_keys(p)
 
 
 time.sleep(1)
-driver.find_element(By.ID, value="login").click()
+driver.find_element(By.ID, value="login-dashboard").click()
 
 driver.refresh()#刷新页面 
 
