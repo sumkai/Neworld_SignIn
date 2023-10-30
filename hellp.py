@@ -69,4 +69,4 @@ driver.refresh()#刷新页面
 #driver.find_element(By.ID, value="check-in").click() # 点击元素
 button=driver.find_element(By.ID, value="check-in") # 点击元素
 driver.execute_script("$(arguments[0]).click()",button)
-print(ok)
+print('ok')
