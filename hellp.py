@@ -16,7 +16,7 @@ chrome_options.add_argument('--disable-gpu')
 # action  linux服务器驱动地址
 
 service = Service(executable_path="/home/runner/work/Neworld_SignIn/Neworld_SignIn/driver/chromedriver")
-driver = webdriver.Chrome(Service=sercive,chrome_options=chrome_options)  
+driver = webdriver.Chrome(Service=service,chrome_options=chrome_options)  
 #driver = webdriver.Chrome(executable_path='/home/runner/work/Neworld_SignIn/Neworld_SignIn/driver/chromedriver',chrome_options=chrome_options)    # Chrome浏览器  
 # driver = webdriver.Chrome(executable_path='/home/runner/work/Neworld_SignIn/Neworld_SignIn/driver/chromedriver')    # Chrome浏览器  
 
