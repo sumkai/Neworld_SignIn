@@ -37,7 +37,7 @@ driver.get("https://neworld.tv/auth/login")
 #  获取cookies 
 time.sleep(5)
 # 账号密码登录版本
-driver.find_element(by=By.ID, value='email').clear()
+driver.find_element(By.ID, value='email').clear()
 driver.find_element_by_id("email").send_keys(u)
 
 driver.find_element_by_id('passwd').clear()
