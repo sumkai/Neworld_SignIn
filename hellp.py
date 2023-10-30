@@ -67,3 +67,4 @@ driver.refresh()#刷新页面
 # print('buttons',buttons)
 
 driver.find_element(By.ID, value="checkin").click() # 点击元素
+print(ok)
