@@ -1,68 +1,52 @@
 from selenium import webdriver
-import time
-import json
 import os
-import subprocess
+import time
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from notify import send
 
-# 虚拟出Chrome界面
+# 配置Chrome选项
 chrome_options = Options()
-chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--window-size=1420,1080')
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
-# action  linux服务器驱动地址
-driver = webdriver.Chrome(options=chrome_options)  
-# windows 系统驱动路径
-# driver = webdriver.Chrome(executable_path='D:\Downloads\chromedriver_win32\chromedriver.exe')    # Chrome浏览器
 
-# 环境变量中读取数据，包含账号密码，和登陆页面测试
-u = os.environ["USERNAME"]
-p = os.environ["PASSWORD"]
+# 创建Chrome WebDriver
+driver = webdriver.Chrome(options=chrome_options)
 
-print('u',u)
-print('p',p)
-driver.get("https://neworld.tv/auth/login") 
-#  获取cookies 
+# 从环境变量中读取用户名和密码
+username = os.environ.get("USERNAME")
+password = os.environ.get("PASSWORD")
+
+if not username or not password:
+    print("请设置USERNAME和PASSWORD环境变量。")
+    driver.quit()
+    exit(1)
+
+# 导航到登录页面
+driver.get("https://neworld.tv/auth/login")
+
+# 输入用户名和密码
+driver.find_element(By.ID, 'email').clear()
+driver.find_element(By.ID, 'email').send_keys(username)
+driver.find_element(By.ID, 'passwd').clear()
+driver.find_element(By.ID, 'passwd').send_keys(password)
+
+# 点击登录按钮
+driver.find_element(By.ID, 'login-dashboard').click()
+
+# 等待页面加载
 time.sleep(5)
-# 账号密码登录版本
-driver.find_element(By.ID, value='email').clear()
-driver.find_element(By.ID, value="email").send_keys(u)
-driver.find_element(By.ID, value='passwd').clear()
-driver.find_element(By.ID, value="passwd").send_keys(p)
-#driver.find_element_by_id('email').clear()
-#driver.find_element_by_id("email").send_keys(u)
-#driver.find_element_by_id('passwd').clear()
-#driver.find_element_by_id("passwd").send_keys(p)
-time.sleep(1)
-driver.find_element(By.ID, value="login-dashboard").click()
-driver.refresh()#刷新页面 
-driver.refresh()#刷新页面 
-time.sleep(2)
 
+# 查找并点击"Check-In"按钮
+try:
+    driver.find_element(By.CSS_SELECTOR, '[id*=check-in]').click()
+except Exception as e:
+    print("无法点击Check-In按钮:", e)
 
-# 设置固定延迟为2秒
-delay = 2
-
-# 使用 CSS_SELECTOR 和包含 "check-in" 字符串的属性选择器
-button = driver.find_element(By.CSS_SELECTOR, '[id*=check-in]')
-
-# 添加固定延迟
-time.sleep(delay)
-
-# 执行点击操作
-driver.execute_script("arguments[0].click()", button)
-
-#driver.execute_script("(arguments[0]).click()",button)
-text = button.text
-
-print(text)
+# 获取"Check-In"按钮的文本
+check_in_text = driver.find_element(By.CSS_SELECTOR, '[id*=check-in]').text
 
 # 查找包含特定文本的元素
 used = driver.find_element(By.XPATH, '//span[contains(text(),"过去")]')
@@ -71,16 +55,19 @@ rest = driver.find_element(By.XPATH, '//span[contains(text(),"剩余")]')
 timerest = driver.find_element(By.XPATH,  '//*[contains(text(),"到期")]')
 
 # 提取文本内容并去除空格和换行符
-usedtext = used.text.strip()
-todaytext = today.text.strip()
-resttext = rest.text.strip()
-timeresttext = timerest.text.strip()
+used_text = used.text.strip()
+today_text = today.text.strip()
+rest_text = rest.text.strip()
+timerest_text = timerest.text.strip()
 
 # 合并文本内容为一个多行字符串
-content = f"{usedtext}\n{todaytext}\n{resttext}\n{timeresttext}"
+content = f"{check_in_text}\n{used_text}\n{today_text}\n{rest_text}\n{timerest_text}"
 
 print(content)
 
-send ("新界"+text,content)
+# 在这里添加通知的代码
+send ("新界"+check_in_text,content)
 
+
+# 退出浏览器
 driver.quit()
