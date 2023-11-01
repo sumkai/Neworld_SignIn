@@ -2,9 +2,13 @@ from selenium import webdriver
 import time
 import json
 import os
+import subprocess
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from notify import send
 
 # 虚拟出Chrome界面
 chrome_options = Options()
@@ -40,9 +44,43 @@ time.sleep(1)
 driver.find_element(By.ID, value="login-dashboard").click()
 driver.refresh()#刷新页面 
 driver.refresh()#刷新页面 
-time.sleep(5)
+time.sleep(2)
 
-#driver.find_element(By.ID, value="check-in").click() # 点击元素
-button=driver.find_element(By.ID, value="check-in") # 点击元素
-driver.execute_script("(arguments[0]).click()",button)
-print('ok')
+
+# 设置固定延迟为2秒
+delay = 2
+
+# 使用 CSS_SELECTOR 和包含 "check-in" 字符串的属性选择器
+button = driver.find_element(By.CSS_SELECTOR, '[id*=check-in]')
+
+# 添加固定延迟
+time.sleep(delay)
+
+# 执行点击操作
+driver.execute_script("arguments[0].click()", button)
+
+#driver.execute_script("(arguments[0]).click()",button)
+text = button.text
+
+print(text)
+
+# 查找包含特定文本的元素
+used = driver.find_element(By.XPATH, '//span[contains(text(),"过去")]')
+today = driver.find_element(By.XPATH, '//span[contains(text(),"今日")]')
+rest = driver.find_element(By.XPATH, '//span[contains(text(),"剩余")]')
+timerest = driver.find_element(By.XPATH,  '//*[contains(text(),"到期")]')
+
+# 提取文本内容并去除空格和换行符
+usedtext = used.text.strip()
+todaytext = today.text.strip()
+resttext = rest.text.strip()
+timeresttext = timerest.text.strip()
+
+# 合并文本内容为一个多行字符串
+content = f"{usedtext}\n{todaytext}\n{resttext}\n{timeresttext}"
+
+print(content)
+
+send ("新界"+text,content)
+
+driver.quit()
