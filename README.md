@@ -1,5 +1,7 @@
 fork自原作者
-更改为适用于新版青龙面板
+更改为适用于新版青龙面板  
+
+拉取链接： https://github.com/sumkai/Neworld_SignIn.git
 
 ### 0、功能
 
