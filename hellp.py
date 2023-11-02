@@ -4,6 +4,8 @@ import time
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from notify import send
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 
 # 配置Chrome选项
 chrome_options = Options()
@@ -18,6 +20,8 @@ driver = webdriver.Chrome(options=chrome_options)
 # 从环境变量中读取用户名和密码
 username = os.environ.get("USERNAME")
 password = os.environ.get("PASSWORD")
+
+print(username)
 
 if not username or not password:
     print("请设置USERNAME和PASSWORD环境变量。")
@@ -37,13 +41,10 @@ driver.find_element(By.ID, 'passwd').send_keys(password)
 driver.find_element(By.ID, 'login-dashboard').click()
 
 # 等待页面加载
-time.sleep(5)
+time.sleep(10)
 
-# 查找并点击"Check-In"按钮
-try:
-    driver.find_element(By.CSS_SELECTOR, '[id*=check-in]').click()
-except Exception as e:
-    print("无法点击Check-In按钮:", e)
+check_in_button = driver.find_element(By.ID, 'check-in')
+driver.execute_script("arguments[0].click();", check_in_button)
 
 # 获取"Check-In"按钮的文本
 check_in_text = driver.find_element(By.CSS_SELECTOR, '[id*=check-in]').text
