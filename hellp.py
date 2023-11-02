@@ -4,8 +4,6 @@ import time
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from notify import send
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
 
 # 配置Chrome选项
 chrome_options = Options()
@@ -21,8 +19,6 @@ driver = webdriver.Chrome(options=chrome_options)
 username = os.environ.get("USERNAME")
 password = os.environ.get("PASSWORD")
 
-print(username)
-
 if not username or not password:
     print("请设置USERNAME和PASSWORD环境变量。")
     driver.quit()
@@ -32,9 +28,7 @@ if not username or not password:
 driver.get("https://neworld.tv/auth/login")
 
 # 输入用户名和密码
-driver.find_element(By.ID, 'email').clear()
 driver.find_element(By.ID, 'email').send_keys(username)
-driver.find_element(By.ID, 'passwd').clear()
 driver.find_element(By.ID, 'passwd').send_keys(password)
 
 # 点击登录按钮
@@ -43,8 +37,11 @@ driver.find_element(By.ID, 'login-dashboard').click()
 # 等待页面加载
 time.sleep(10)
 
-check_in_button = driver.find_element(By.ID, 'check-in')
-driver.execute_script("arguments[0].click();", check_in_button)
+# 查找并点击"Check-In"按钮
+try:
+    driver.find_element(By.ID, 'check-in').click()
+except Exception as e:
+    print("无法点击 Check-In 按钮:", e)
 
 # 获取"Check-In"按钮的文本
 check_in_text = driver.find_element(By.CSS_SELECTOR, '[id*=check-in]').text
@@ -67,8 +64,7 @@ content = f"{check_in_text}\n{used_text}\n{today_text}\n{rest_text}\n{timerest_t
 print(content)
 
 # 在这里添加通知的代码
-send ("新界"+check_in_text,content)
-
+send("新界" + check_in_text, content)
 
 # 退出浏览器
 driver.quit()
